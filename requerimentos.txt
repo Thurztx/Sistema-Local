@@ -1,0 +1,28 @@
+Criar o ambiente virtual
+
+python -m venv venv
+
+
+
+Ativar ambiente virtual
+
+venv\Scripts\activate
+
+
+
+Instalação das Bibliotecas
+pip install customtkinter
+
+pip install sqlalchemy
+
+pip install pillow
+
+pip install reportlab
+
+pip install openpyxl
+
+pip install matplotlib
+
+pip install pandas
+
+pip install python-dotenv
