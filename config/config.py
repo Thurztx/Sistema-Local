@@ -1,13 +1,7 @@
-APP_NAME
+APP_NAME = "ARYN - Controle de Estoque"
 
-VERSION
+VERSION = "1.0"
 
-DATABASE_PATH
+DATABASE_NAME = "estoque.db"
 
-BACKUP_PATH
-
-EXPORT_PATH
-
-PRIMARY_COLOR
-
-SECONDARY_COLOR
+DATABASE_PATH = "database/estoque.db"

@@ -26,3 +26,14 @@ pip install matplotlib
 pip install pandas
 
 pip install python-dotenv
+
+
+
+
+
+GITHUB
+
+git init
+git add .
+git commit -m "Descrição do commit"
+git push -u origin main

@@ -16,10 +16,10 @@ from datetime import datetime
 from config.database import base
 
 
-# classe
-class Saida(base):
+# class
+class Movimentacao(base):
 
-    __tablename__ = "saidas"
+    __tablename__ = "movimentacoes"
 
     id = Column(Integer, primary_key=True)
 
@@ -33,35 +33,24 @@ class Saida(base):
                         index=True
                         )
 
-    cliente_id = Column(Integer, 
-                        ForeignKey("clientes.id"), 
-                        nullable=True,
-                        index=True
-                        )
+    tipo = Column(String(20), nullable=False)
 
     quantidade = Column(Integer, nullable=False)
 
-    tipo = Column(String(30))
+    observacao = Column(Text)
 
-    motivo = Column(Text)
-
-    data_saida = Column(DateTime, 
-                        default=datetime.now,
-                        index=True
-                        )
+    data = Column(DateTime, 
+                  default=datetime.now,
+                  index=True
+                  )
 
     # Relacionamentos
 produto = relationship(
     "Produto",
-    back_populates="saidas"
+    back_populates="movimentacoes"
 )
 
 usuario = relationship(
     "Usuario",
-    back_populates="saidas"
-)
-
-cliente = relationship(
-    "Cliente",
-    back_populates="saidas"
+    back_populates="movimentacoes"
 )
