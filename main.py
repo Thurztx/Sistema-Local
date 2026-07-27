@@ -10,6 +10,6 @@ from models.movimentacao import *
 from models.saida import *
 from models.usuario import *
 
-Base.metadata.create_all(bind=engine)
+base.metadata.create_all(bind=engine)
 
 print("Banco criado com sucesso!")

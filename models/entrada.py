@@ -34,7 +34,7 @@ class Entrada(base):
                            )
 
     usuario_id = Column(Integer, 
-                        ForeignKey("usuarios.id")
+                        ForeignKey("usuarios.id"),
                         index=True
                         )
 
