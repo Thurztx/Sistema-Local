@@ -1,0 +1,72 @@
+class Colors:
+
+    # ========= Tema Claro =========
+
+    PRIMARY = "#2563EB"
+    PRIMARY_HOVER = "#1D4ED8"
+
+    BACKGROUND = "#F8FAFC"
+    SURFACE = "#FFFFFF"
+
+    SIDEBAR = "#111827"
+    NAVBAR = "#111827"
+
+    TEXT = "#1F2937"
+    TEXT_SECONDARY = "#6B7280"
+
+    BORDER = "#E5E7EB"
+
+    SUCCESS = "#16A34A"
+    WARNING = "#D97706"
+    ERROR = "#DC2626"
+    INFO = "#0EA5E9"
+
+    TABLE_HEADER = "#F3F4F6"
+    TABLE_ROW = "#FFFFFF"
+    TABLE_ROW_ALT = "#FAFAFA"
+    TABLE_HOVER = "#EFF6FF"
+
+    INPUT_BG = "#FFFFFF"
+    INPUT_BORDER = "#D1D5DB"
+    INPUT_FOCUS = "#2563EB"
+
+    BUTTON_SECONDARY = "#FFFFFF"
+    BUTTON_SECONDARY_HOVER = "#F3F4F6"
+
+
+
+class DarkColors:
+
+    # ========= Tema Escuro =========
+
+
+    PRIMARY = "#3B82F6"
+    PRIMARY_HOVER = "#2563EB"
+
+    BACKGROUND = "#0F172A"
+    SURFACE = "#1E293B"
+
+    SIDEBAR = "#111827"
+    NAVBAR = "#111827"
+
+    TEXT = "#F8FAFC"
+    TEXT_SECONDARY = "#CBD5E1"
+
+    BORDER = "#334155"
+
+    SUCCESS = "#22C55E"
+    WARNING = "#F59E0B"
+    ERROR = "#EF4444"
+    INFO = "#38BDF8"
+
+    TABLE_HEADER = "#334155"
+    TABLE_ROW = "#1E293B"
+    TABLE_ROW_ALT = "#273549"
+    TABLE_HOVER = "#334155"
+
+    INPUT_BG = "#273549"
+    INPUT_BORDER = "#334155"
+    INPUT_FOCUS = "#3B82F6"
+
+    BUTTON_SECONDARY = "#273549"
+    BUTTON_SECONDARY_HOVER = "#334155"

@@ -1,0 +1,17 @@
+class Dimensions:
+
+    SIDEBAR_WIDTH = 260
+
+    NAVBAR_HEIGHT = 70
+
+    CARD_RADIUS = 12
+
+    BUTTON_RADIUS = 8
+
+    INPUT_RADIUS = 8
+
+    MODAL_RADIUS = 16
+
+    TABLE_ROW_HEIGHT = 40
+
+    ICON_SIZE = 22
