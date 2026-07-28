@@ -1,11 +1,13 @@
+# importação de bibliotecas 
 import customtkinter as ctk
 
+# importação de classes
 from app.theme.theme_manager import ThemeManager
 from app.theme.fonts import Fonts
 from app.theme.dimensions import Dimensions
 from app.theme.spacing import Spacing
 
-
+# Sidebar Lateral esquerda
 class Sidebar(ctk.CTkFrame):
 
     def __init__(self, master, on_menu_click=None):
@@ -136,30 +138,55 @@ class Sidebar(ctk.CTkFrame):
 
             for key, button in self.buttons.items():
 
-            if key == menu:
+                if key == menu:
+                    button.configure(
+                    fg_color=colors.PRIMARY,
+                    hover_color=colors.PRIMARY_HOVER,
+                    text_color="white"
+                    )
 
-                button.configure(
+                else:
 
-                fg_color=colors.PRIMARY,
+                    button.configure(
+                        fg_color="transparent",
+                        hover_color="#1F2937",
+                        text_color="#E5E7EB"
+                    )
 
-                hover_color=colors.PRIMARY_HOVER,
+                if self.on_menu_click:
+                    self.on_menu_click(menu)
 
-                text_color="white"
+        # separador entre os menus e o botão "sair"
+        separator = ctk.CTkFrame(
+            self,
+            height=1,
+            fg_color="#374151"
 
-                )
+        )
 
-            else:
+        separator.pack(
+            fill="x",
+            padx=15,
+            pady=20
+        )
 
-                button.configure(
+        # Botão Logout (SAIR)
+        logout = ctk.CTkButton(
+            self,
+            text="🚪   Sair",
+            anchor="w",
+            fg_color="transparent",
+            hover_color="#7F1D1D",
+            command=self.logout
+        )
 
-                    fg_color="transparent",
+        logout.pack(
+            fill="x",
+            padx=15,
+            pady=15
+        )
 
-                    hover_color="#1F2937",
+        # Metódo Logout
+        def logout(self):
 
-                    text_color="#E5E7EB"
-
-                )
-
-            if self.on_menu_click:
-
-                self.on_menu_click(menu)
+            print("Logout")
