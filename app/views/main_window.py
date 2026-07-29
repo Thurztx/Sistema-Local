@@ -1,15 +1,15 @@
-import customtkinter as ctk
+def criar_interface(self):
+    titulo = ctk.CTkLabel(
+        self,
+        text="Sistema de Controle de Estoque",
+        font=("Segoe UI", 28, "bold")
+    )
 
+    titulo.pack(pady=40)
 
-class MainWindow(ctk.CTk):
+    botao = ctk.CTkButton(
+        self,
+        text="Produtos"
+    )
 
-    def __init__(self):
-        super().__init__()
-
-        self.title("Controle de Estoque")
-        self.geometry("1700x900")
-
-        self.criar_interface()
-
-    def criar_interface(self):
-        pass
+    botao.pack()
