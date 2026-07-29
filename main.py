@@ -1,15 +1,10 @@
-from config.database import base, engine
+from app.views.main_window import MainWindow
 
-# Importe todas as models
-from models.produto import *
-from models.categoria import *
-from models.cliente import *
-from models.entrada import *
-from models.fornecedor import *
-from models.movimentacao import *
-from models.saida import *
-from models.usuario import *
 
-base.metadata.create_all(bind=engine)
+def main():
+    app = MainWindow()
+    app.mainloop()
 
-print("Banco criado com sucesso!")
+
+if __name__ == "__main__":
+    main()
