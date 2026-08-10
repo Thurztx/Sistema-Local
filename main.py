@@ -1,8 +1,8 @@
-from app.views.main_window import criar_interface
+from app.views.main_window import MainWindow
 
 
 def main():
-    app = criar_interface()
+    app = MainWindow()
     app.mainloop()
 
 

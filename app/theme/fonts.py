@@ -1,20 +1,36 @@
+import customtkinter as ctk
+
 class Fonts:
 
     FAMILY = "Segoe UI"
 
     DISPLAY = (FAMILY, 28, "bold")
 
-    H1 = (FAMILY, 24, "bold")
+    H1 = ctk.CTkFont(
+        family="Segoe UI",
+        size=26,
+        weight="bold"
+    )
 
-    H2 = (FAMILY, 20, "bold")
+    H2 = ctk.CTkFont(
+        family="Segoe UI",
+        size=18,
+        weight="bold"
+    )
 
     H3 = (FAMILY, 18, "bold")
 
     SUBTITLE = (FAMILY, 16, "bold")
 
-    BODY = (FAMILY, 14)
+    BODY = ctk.CTkFont(
+        family="Segoe UI",
+        size=14
+    )
 
-    SMALL = (FAMILY, 12)
+    SMALL = ctk.CTkFont(
+        family="Segoe UI",
+        size=12
+    )
 
     BUTTON = (FAMILY, 14, "bold")
 
