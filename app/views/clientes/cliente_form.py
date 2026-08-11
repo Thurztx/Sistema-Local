@@ -4,16 +4,23 @@ from tkinter import messagebox
 
 import customtkinter as ctk
 
+from app.controllers.cliente_controller import ClienteController
 from theme.theme_manager import ThemeManager
 from theme.fonts import Fonts
 
 class ClienteForm(ctk.CTkToplevel):
 
-    def __init__(self, master, controller=None, cliente=None):
+    def __init__(self, 
+                 master, 
+                 controller=None, 
+                 cliente=None,
+                 on_saved=None
+    ):
         super().__init__(master)
 
         self.controller = controller
         self.cliente = cliente
+        self.on_saved=None
 
         self.colors = ThemeManager.colors()
 
@@ -24,6 +31,14 @@ class ClienteForm(ctk.CTkToplevel):
         self.center_window()
 
         self.grab_set()
+
+        if self.cliente is not None:
+            self.load_client()
+
+        if self.on_saved:
+            self.on_saved()
+
+        self.destroy()
 
     def configure_window(self):
 
@@ -1113,3 +1128,240 @@ class ClienteForm(ctk.CTkToplevel):
                 widget.focus_set()
             except Exception:
                 pass
+
+    def save_client(self):
+
+        # ==========================================
+        # Validação
+        # ==========================================
+
+        if not self.validate_form():
+            return
+
+        # ==========================================
+        # Verificar Controller
+        # ==========================================
+
+        if self.controller is None:
+
+            self.show_error(
+                "O controlador de clientes não foi configurado."
+            )
+
+            return
+
+        # ==========================================
+        # Obter dados
+        # ==========================================
+
+        dados = self.get_form_data()
+
+        # ==========================================
+        # Desabilitar botão
+        # ==========================================
+
+        self.btn_salvar.configure(
+            state="disabled"
+        )
+
+        try:
+
+            # ======================================
+            # Cadastro
+            # ======================================
+
+            if self.cliente is None:
+
+                self.controller.create_client(
+                    dados
+                )
+
+                messagebox.showinfo(
+                    "Sucesso",
+                    "Cliente cadastrado com sucesso!",
+                    parent=self
+                )
+
+            # ======================================
+            # Edição
+            # ======================================
+
+            else:
+
+                self.controller.update_client(
+                    self.cliente.id,
+                    dados
+                )
+
+                messagebox.showinfo(
+                    "Sucesso",
+                    "Cliente atualizado com sucesso!",
+                    parent=self
+                )
+
+            # ======================================
+            # Fechar formulário
+            # ======================================
+        
+            if self.on_saved is not None:
+                self.on_saved()
+
+            self.destroy()
+
+        except Exception as erro:
+
+            self.btn_salvar.configure(
+                state="normal"
+            )
+
+            messagebox.showerror(
+                "Erro",
+                f"Não foi possível salvar o cliente.\n\n{erro}",
+                parent=self
+            )
+
+    def get_form_data(self):
+
+        return {
+            "nome": self.nome.get().strip(),
+
+            "cpf": self.cpf.get().strip(),
+
+            "data_nascimento": self.format_birth_date_for_database(
+                self.data_nascimento.get().strip()
+            ),
+
+            "genero": self.genero.get().strip(),
+
+            "email": self.email.get().strip(),
+
+            "telefone": self.telefone.get().strip(),
+
+            "cep": self.cep.get().strip(),
+
+            "estado": self.estado.get().strip(),
+
+            "cidade": self.cidade.get().strip(),
+
+            "bairro": self.bairro.get().strip(),
+
+            "rua": self.rua.get().strip(),
+
+            "numero": self.numero.get().strip(),
+
+            "complemento": self.complemento.get().strip(),
+
+            "observacoes": self.observacoes.get(
+                "1.0",
+                "end-1c"
+            ).strip()
+        }
+        
+    def load_client(self):
+
+        self.nome.insert(
+            0,
+            self.cliente.nome or ""
+        )
+
+        self.cpf.insert(
+            0,
+            self.cliente.cpf or ""
+        )
+
+        self.data_nascimento.insert(
+            0,
+            self.format_birth_date_for_form(
+                self.cliente.data_nascimento
+            )
+        )
+
+        self.genero.set(
+            self.cliente.genero or ""
+        )
+
+        self.email.insert(
+            0,
+            self.cliente.email or ""
+        )
+
+        self.telefone.insert(
+            0,
+            self.cliente.telefone or ""
+        )
+
+        self.cep.insert(
+            0,
+            self.cliente.cep or ""
+        )
+
+        self.estado.set(
+            self.cliente.estado or ""
+        )
+
+        self.cidade.insert(
+            0,
+            self.cliente.cidade or ""
+        )
+
+        self.bairro.insert(
+            0,
+            self.cliente.bairro or ""
+        )
+
+        self.rua.insert(
+            0,
+            self.cliente.rua or ""
+        )
+
+        self.numero.insert(
+            0,
+            self.cliente.numero or ""
+        )
+
+        self.complemento.insert(
+            0,
+            self.cliente.complemento or ""
+        )
+
+        self.observacoes.insert(
+            "1.0",
+            self.cliente.observacoes or ""
+        )
+
+        self.update_observations_counter()
+
+    def format_birth_date_for_form(self, value):
+
+        if not value:
+            return ""
+
+        if isinstance(value, datetime):
+            return value.strftime("%d/%m/%Y")
+
+        try:
+
+            data = datetime.strptime(
+                str(value),
+                "%Y-%m-%d"
+            )
+
+            return data.strftime("%d/%m/%Y")
+
+        except ValueError:
+
+            return str(value)
+        
+    def format_birth_date_for_database(self, value):
+
+        if not value:
+            return None
+
+        data = datetime.strptime(
+            value,
+            "%d/%m/%Y"
+        )
+
+        return data.strftime(
+            "%Y-%m-%d"
+        )
