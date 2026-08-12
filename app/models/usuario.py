@@ -51,7 +51,7 @@ class Usuario(base):
                    index=True
                    )
 
-    # Relacionamentos
+    # RELACIONAMENTO ENTRE TABELAS
 entradas = relationship(
     "Entrada",
     back_populates="usuario"
@@ -64,5 +64,10 @@ saidas = relationship(
 
 movimentacoes = relationship(
     "Movimentacao",
+    back_populates="usuario"
+)
+
+compras = relationship(
+    "Compra",
     back_populates="usuario"
 )

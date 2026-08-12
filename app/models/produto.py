@@ -47,8 +47,8 @@ class Produto(base):
         # Status
     status = Column(Boolean, default=True)
 
-    # Relacionamentos
 
+# RELACIONAMENTO ENTRE TABELAS
 entradas = relationship(
     "Entrada",
     back_populates="produto"
@@ -61,5 +61,10 @@ saidas = relationship(
 
 movimentacoes = relationship(
     "Movimentacao",
+    back_populates="produto"
+)
+
+itens_compra = relationship(
+    "ItemCompra",
     back_populates="produto"
 )

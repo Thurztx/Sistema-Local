@@ -1,39 +1,27 @@
-Criar o ambiente virtual
-
-python -m venv venv
-
+    Criar o ambiente virtual
+        python -m venv venv
 
 
-Ativar ambiente virtual
-
-venv\Scripts\activate
+    Ativar ambiente virtual
+        venv\Scripts\activate
 
 
 
 Instalação das Bibliotecas
-pip install customtkinter
 
-pip install sqlalchemy
-
-pip install pillow
-
-pip install reportlab
-
-pip install openpyxl
-
-pip install matplotlib
-
-pip install pandas
-
-pip install python-dotenv
+    pip install customtkinter
+    pip install sqlalchemy
+    pip install pillow
+    pip install reportlab
+    pip install openpyxl
+    pip install matplotlib
+    pip install pandas
+    pip install python-dotenv
 
 
+GITHUB COMMIT
 
-
-
-GITHUB
-
-git init
-git add .
-git commit -m "Descrição do commit"
-git push -u origin main
+    git init
+    git add .
+    git commit -m "Descrição do commit"
+    git push -u origin main

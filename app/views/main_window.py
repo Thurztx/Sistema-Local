@@ -1,8 +1,14 @@
 import customtkinter as ctk
 
+from app.views.compras.compras_view import ComprasView
+from app.controllers.compra_controller import CompraController
+from app.theme.theme_manager import ThemeManager
+from app.theme.fonts import Fonts
+
 class MainWindow(ctk.CTk):
 
     def __init__(self):
+
         super().__init__()
 
         # ==============================
@@ -41,6 +47,12 @@ class MainWindow(ctk.CTk):
         # ==============================
 
         self.tela_atual = None
+
+        # ==============================
+        # CONTROLLERS
+        # ==============================
+
+        self.compra_controller = CompraController()
 
         # ==============================
         # CRIA INTERFACE
@@ -130,6 +142,11 @@ class MainWindow(ctk.CTk):
         )
 
         self.criar_botao_menu(
+            "Compras",
+            self.mostrar_compras
+        )
+
+        self.criar_botao_menu(
             "Entradas",
             self.mostrar_entradas
         )
@@ -142,31 +159,6 @@ class MainWindow(ctk.CTk):
         self.criar_botao_menu(
             "Usuários",
             self.mostrar_usuarios
-        )
-
-# BOTÃO DO MENU
-    def criar_botao_menu(
-        self,
-        texto,
-        comando
-    ):
-
-        botao = ctk.CTkButton(
-            self.sidebar,
-            text=texto,
-            command=comando,
-            height=45,
-            corner_radius=8,
-            fg_color="transparent",
-            hover_color="#2A2A2A",
-            text_color="#FFFFFF",
-            anchor="w"
-        )
-
-        botao.pack(
-            fill="x",
-            padx=15,
-            pady=4
         )
 
 # ÁREA DE CONTEÚDO
@@ -346,6 +338,25 @@ class MainWindow(ctk.CTk):
         )
 
     # ==========================================================
+    # COMPRAS
+    # ==========================================================
+
+    def mostrar_compras(self):
+
+        self.limpar_conteudo()
+
+        self.tela_atual = ComprasView(
+            self.area_conteudo,
+            controller=self.compra_controller
+        )
+
+        self.tela_atual.grid(
+            row=0,
+            column=0,
+            sticky="nsew"
+        )
+
+    # ==========================================================
     # ENTRADAS
     # ==========================================================
 
@@ -449,4 +460,3 @@ class MainWindow(ctk.CTk):
         titulo.pack(
             anchor="w"
         )
-

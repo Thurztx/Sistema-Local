@@ -43,8 +43,13 @@ class Fornecedor(base):
         # status
     status = Column(Boolean, default=True)
 
-    # Relacionamentos
+    # RELACIONAMENTO ENTRE TABELAS
 entradas = relationship(
     "Entrada",
+    back_populates="fornecedor"
+)
+
+compras = relationship(
+    "Compra",
     back_populates="fornecedor"
 )

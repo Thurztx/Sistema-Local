@@ -9,6 +9,8 @@ from models.fornecedor import *
 from models.movimentacao import *
 from models.saida import *
 from models.usuario import *
+from models.compra import *
+from models.item_compra import *
 
 base.metadata.create_all(bind=engine)
 

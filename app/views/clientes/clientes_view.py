@@ -1,5 +1,8 @@
 from app.views.clientes.cliente_form import ClienteForm
 
+from app.theme.theme_manager import ThemeManager
+from app.theme.fonts import Fonts
+
 def open_client_form(self):
 
     ClienteForm(

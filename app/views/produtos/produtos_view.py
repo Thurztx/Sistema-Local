@@ -1,8 +1,8 @@
 import customtkinter as ctk
 from datetime import datetime
 
-from theme.theme_manager import ThemeManager
-from theme.fonts import Fonts
+from app.theme.theme_manager import ThemeManager
+from app.theme.fonts import Fonts
 
 # Componentes reutilizáveis (adicione conforme for criando)
 from components.search_bar import SearchBar
