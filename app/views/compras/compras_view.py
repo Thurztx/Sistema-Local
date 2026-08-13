@@ -4,8 +4,8 @@ from tkinter import messagebox
 
 from datetime import datetime, timedelta
 
-from theme.theme_manager import ThemeManager
-from theme.fonts import Fonts
+from app.theme.theme_manager import ThemeManager
+from app.theme.fonts import Fonts
 
 
 class ComprasView(ctk.CTkFrame):
@@ -19,7 +19,7 @@ class ComprasView(ctk.CTkFrame):
         self.colors = ThemeManager.colors()
 
         self.configure(
-            fg_color=self.colors["background"]
+            fg_color=self.colors.BACKGROUND
         )
 
         self.create_widgets()
@@ -60,7 +60,7 @@ class ComprasView(ctk.CTkFrame):
             self.header,
             text="Compras",
             font=Fonts.title(),
-            text_color=self.colors["text"]
+            text_color=self.colors.TEXT
         )
 
         self.title.pack(
@@ -71,17 +71,13 @@ class ComprasView(ctk.CTkFrame):
             self.header,
             text="Controle de compras e entradas de produtos",
             font=Fonts.body(),
-            text_color=self.colors["text_secondary"]
+            text_color=self.colors.TEXT_SECONDARY
         )
 
         self.subtitle.pack(
             anchor="w",
             pady=(5, 0)
         )
-
-    # ==========================================
-    # Barra de ações
-    # ==========================================
 
     def create_action_bar(self):
 
@@ -96,17 +92,27 @@ class ComprasView(ctk.CTkFrame):
             pady=(10, 15)
         )
 
+        # ==========================================
+        # NOVA COMPRA
+        # ==========================================
+
         self.btn_nova_compra = ctk.CTkButton(
             self.action_bar,
             text="+ Nova Compra",
             font=Fonts.button(),
             height=40,
+            fg_color=self.colors.PRIMARY,
+            hover_color=self.colors.PRIMARY_HOVER,
             command=self.open_purchase_form
         )
 
         self.btn_nova_compra.pack(
             side="left"
         )
+
+        # ==========================================
+        # FILTRO
+        # ==========================================
 
         self.filter_menu = ctk.CTkOptionMenu(
             self.action_bar,
@@ -118,7 +124,11 @@ class ComprasView(ctk.CTkFrame):
             ],
             width=150,
             height=40,
-            command=self.filter_purchases
+            command=self.filter_purchases,
+            fg_color=self.colors.SURFACE,
+            button_color=self.colors.PRIMARY,
+            button_hover_color=self.colors.PRIMARY_HOVER,
+            text_color=self.colors.TEXT
         )
 
         self.filter_menu.set("Todas")
@@ -128,12 +138,19 @@ class ComprasView(ctk.CTkFrame):
             padx=(10, 0)
         )
 
+        # ==========================================
+        # BOTÃO PESQUISAR
+        # ==========================================
+
         self.btn_search = ctk.CTkButton(
             self.action_bar,
             text="Pesquisar",
             width=100,
             height=40,
-            command=self.search_purchases
+            font=Fonts.button(),
+            command=self.search_purchases,
+            fg_color=self.colors.PRIMARY,
+            hover_color=self.colors.PRIMARY_HOVER
         )
 
         self.btn_search.pack(
@@ -141,11 +158,18 @@ class ComprasView(ctk.CTkFrame):
             padx=(10, 0)
         )
 
+        # ==========================================
+        # CAMPO DE PESQUISA
+        # ==========================================
+
         self.search_entry = ctk.CTkEntry(
             self.action_bar,
             width=280,
             height=40,
-            placeholder_text="Pesquisar compra..."
+            placeholder_text="Pesquisar compra...",
+            fg_color=self.colors.INPUT_BG,
+            border_color=self.colors.INPUT_BORDER,
+            text_color=self.colors.TEXT
         )
 
         self.search_entry.pack(
@@ -153,14 +177,14 @@ class ComprasView(ctk.CTkFrame):
         )
 
     # ==========================================
-    # Lista
+    # Lista de Compras
     # ==========================================
 
     def create_purchase_list(self):
 
         self.list_container = ctk.CTkFrame(
             self,
-            fg_color=self.colors["surface"],
+            fg_color=self.colors.SURFACE,
             corner_radius=10
         )
 
@@ -171,9 +195,13 @@ class ComprasView(ctk.CTkFrame):
             pady=(0, 15)
         )
 
+        # ==========================================
+        # CABEÇALHO DA TABELA
+        # ==========================================
+
         self.table_header = ctk.CTkFrame(
             self.list_container,
-            fg_color=self.colors["surface"]
+            fg_color=self.colors.SURFACE
         )
 
         self.table_header.pack(
@@ -198,7 +226,7 @@ class ComprasView(ctk.CTkFrame):
                 self.table_header,
                 text=column,
                 font=Fonts.label(),
-                text_color=self.colors["text_secondary"]
+                text_color=self.colors.TEXT_SECONDARY
             )
 
             label.pack(
@@ -206,6 +234,10 @@ class ComprasView(ctk.CTkFrame):
                 expand=True,
                 fill="x"
             )
+
+        # ==========================================
+        # CORPO DA TABELA
+        # ==========================================
 
         self.table_body = ctk.CTkScrollableFrame(
             self.list_container,
@@ -240,7 +272,7 @@ class ComprasView(ctk.CTkFrame):
             self.footer,
             text="0 compras encontradas",
             font=Fonts.body(),
-            text_color=self.colors["text_secondary"]
+            text_color=self.colors.TEXT_SECONDARY
         )
 
         self.total_label.pack(
@@ -306,7 +338,7 @@ class ComprasView(ctk.CTkFrame):
             self.table_body,
             text="Nenhuma compra encontrada.",
             font=Fonts.body(),
-            text_color=self.colors["text_secondary"]
+            text_color=self.colors.TEXT_SECONDARY
         )
 
         empty_label.pack(
@@ -321,7 +353,7 @@ class ComprasView(ctk.CTkFrame):
 
         row = ctk.CTkFrame(
             self.table_body,
-            fg_color=self.colors["background"],
+            fg_color=self.colors.BACKGROUND,
             corner_radius=8
         )
 
@@ -343,7 +375,7 @@ class ComprasView(ctk.CTkFrame):
             row,
             text=str(data),
             font=Fonts.body(),
-            text_color=self.colors["text"]
+            text_color=self.colors.TEXT
         )
 
         label_data.pack(
@@ -367,7 +399,7 @@ class ComprasView(ctk.CTkFrame):
             row,
             text=fornecedor,
             font=Fonts.body(),
-            text_color=self.colors["text"]
+            text_color=self.colors.TEXT
         )
 
         label_fornecedor.pack(
@@ -390,7 +422,7 @@ class ComprasView(ctk.CTkFrame):
             row,
             text=f"#{numero}",
             font=Fonts.body(),
-            text_color=self.colors["text"]
+            text_color=self.colors.TEXT
         )
 
         label_numero.pack(
@@ -412,7 +444,7 @@ class ComprasView(ctk.CTkFrame):
             row,
             text=str(produtos),
             font=Fonts.body(),
-            text_color=self.colors["text"]
+            text_color=self.colors.TEXT
         )
 
         label_produtos.pack(
@@ -435,7 +467,7 @@ class ComprasView(ctk.CTkFrame):
             row,
             text=pagamento,
             font=Fonts.body(),
-            text_color=self.colors["text"]
+            text_color=self.colors.TEXT
         )
 
         label_pagamento.pack(
@@ -475,7 +507,7 @@ class ComprasView(ctk.CTkFrame):
                 "."
             ),
             font=Fonts.body(),
-            text_color=self.colors["text"]
+            text_color=self.colors.TEXT
         )
 
         label_total.pack(
@@ -493,7 +525,7 @@ class ComprasView(ctk.CTkFrame):
             row,
             text="Concluída",
             font=Fonts.label(),
-            text_color=self.colors["success"]
+            text_color=self.colors.SUCCESS
         )
 
         status.pack(
@@ -727,7 +759,7 @@ class ComprasView(ctk.CTkFrame):
             window,
             text=f"Compra #{purchase['id']}",
             font=Fonts.title(),
-            text_color=colors["text"]
+            text_color=colors.TEXT
         )
 
         title.pack(
@@ -751,7 +783,7 @@ class ComprasView(ctk.CTkFrame):
                 f"{purchase.get('forma_pagamento', '-')}"
             ),
             font=Fonts.body(),
-            text_color=colors["text_secondary"],
+            text_color=colors.TEXT_SECONDARY,
             justify="left"
         )
 
@@ -767,7 +799,7 @@ class ComprasView(ctk.CTkFrame):
 
         items_frame = ctk.CTkScrollableFrame(
             window,
-            fg_color=colors["surface"]
+            fg_color=colors.SURFACE
         )
 
         items_frame.pack(
@@ -826,7 +858,7 @@ class ComprasView(ctk.CTkFrame):
                     f"Subtotal: R$ {subtotal:.2f}"
                 ),
                 font=Fonts.body(),
-                text_color=colors["text"],
+                text_color=colors.TEXT,
                 anchor="w"
             )
 
@@ -849,7 +881,7 @@ class ComprasView(ctk.CTkFrame):
             window,
             text=f"Total: R$ {total:.2f}",
             font=Fonts.subtitle(),
-            text_color=colors["text"]
+            text_color=colors.TEXT
         )
 
         total_label.pack(

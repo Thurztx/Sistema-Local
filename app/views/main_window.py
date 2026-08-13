@@ -161,6 +161,34 @@ class MainWindow(ctk.CTk):
             self.mostrar_usuarios
         )
 
+    # ==========================================================
+    # BOTÃO DO MENU
+    # ==========================================================
+
+    def criar_botao_menu(
+        self,
+        texto,
+        comando
+    ):
+
+        botao = ctk.CTkButton(
+            self.sidebar,
+            text=texto,
+            command=comando,
+            height=45,
+            corner_radius=8,
+            fg_color="transparent",
+            hover_color="#2A2A2A",
+            text_color="#FFFFFF",
+            anchor="w"
+        )
+
+        botao.pack(
+            fill="x",
+            padx=15,
+            pady=4
+        )
+
 # ÁREA DE CONTEÚDO
     def criar_area_conteudo(self):
 

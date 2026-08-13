@@ -1,43 +1,73 @@
 import customtkinter as ctk
 
+
 class Fonts:
 
-    FAMILY = "Segoe UI"
+    # ==========================================
+    # TÍTULO
+    # ==========================================
 
-    DISPLAY = (FAMILY, 28, "bold")
+    @staticmethod
+    def title():
 
-    H1 = ctk.CTkFont(
-        family="Segoe UI",
-        size=26,
-        weight="bold"
-    )
+        return ctk.CTkFont(
+            size=28,
+            weight="bold"
+        )
 
-    H2 = ctk.CTkFont(
-        family="Segoe UI",
-        size=18,
-        weight="bold"
-    )
+    # ==========================================
+    # SUBTÍTULO
+    # ==========================================
 
-    H3 = (FAMILY, 18, "bold")
+    @staticmethod
+    def subtitle():
 
-    SUBTITLE = (FAMILY, 16, "bold")
+        return ctk.CTkFont(
+            size=16
+        )
 
-    BODY = ctk.CTkFont(
-        family="Segoe UI",
-        size=14
-    )
+    # ==========================================
+    # TEXTO
+    # ==========================================
 
-    SMALL = ctk.CTkFont(
-        family="Segoe UI",
-        size=12
-    )
+    @staticmethod
+    def body():
 
-    BUTTON = (FAMILY, 14, "bold")
+        return ctk.CTkFont(
+            size=14
+        )
 
-    INPUT = (FAMILY, 14)
+    # ==========================================
+    # LABEL
+    # ==========================================
 
-    PLACEHOLDER = (FAMILY, 13, "italic")
+    @staticmethod
+    def label():
 
-    TABLE_HEADER = (FAMILY, 14, "bold")
+        return ctk.CTkFont(
+            size=13,
+            weight="bold"
+        )
 
-    TABLE_BODY = (FAMILY, 13)
+    # ==========================================
+    # BOTÃO
+    # ==========================================
+
+    @staticmethod
+    def button():
+
+        return ctk.CTkFont(
+            size=14,
+            weight="bold"
+        )
+
+    # ==========================================
+    # PEQUENO
+    # ==========================================
+
+    @staticmethod
+    def small():
+
+        return ctk.CTkFont(
+            size=12
+        )
