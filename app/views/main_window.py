@@ -1,7 +1,11 @@
 import customtkinter as ctk
 
 from app.views.compras.compras_view import ComprasView
+from app.views.produtos.produtos_view import ProdutosView
+
 from app.controllers.compra_controller import CompraController
+from app.controllers.produto_controller import ProdutoController
+
 from app.theme.theme_manager import ThemeManager
 from app.theme.fonts import Fonts
 
@@ -53,6 +57,7 @@ class MainWindow(ctk.CTk):
         # ==============================
 
         self.compra_controller = CompraController()
+        self.produto_controller = ProdutoController()
 
         # ==============================
         # CRIA INTERFACE
@@ -274,31 +279,15 @@ class MainWindow(ctk.CTk):
 
         self.limpar_conteudo()
 
-        self.tela_atual = ctk.CTkFrame(
+        self.tela_atual = ProdutosView(
             self.area_conteudo,
-            fg_color="transparent"
+            controller=self.produto_controller
         )
 
         self.tela_atual.grid(
             row=0,
             column=0,
-            sticky="nsew",
-            padx=30,
-            pady=30
-        )
-
-        titulo = ctk.CTkLabel(
-            self.tela_atual,
-            text="Produtos",
-            font=ctk.CTkFont(
-                size=30,
-                weight="bold"
-            ),
-            text_color="#111111"
-        )
-
-        titulo.pack(
-            anchor="w"
+            sticky="nsew"
         )
 
 # CLIENTES
