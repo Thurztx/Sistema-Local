@@ -25,3 +25,8 @@ GITHUB COMMIT
     git add .
     git commit -m "Descrição do commit"
     git push -u origin main
+
+
+CRIAR BANCO DE DADOS
+
+    python -m app.database.create_db

@@ -14,7 +14,7 @@ from sqlalchemy.orm import relationship
 from datetime import datetime
 from config.database import base
 
-class ItemCompra(Base):
+class ItemCompra(base):
 
     __tablename__ = "itens_compra"
 

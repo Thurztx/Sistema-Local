@@ -1,22 +1,60 @@
-# impotações de biblioteca 
+from pathlib import Path
+
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, declarative_base
 
-# caminho para o banco SQLite
-DATABASE_URL = "sqlite:///database/estoque.db"
 
-# conexão com o banco 
-engine = create_engine(
-    DATABASE_URL,
-    echo=False
+# ==========================================
+# DIRETÓRIO PRINCIPAL DO PROJETO
+# ==========================================
+
+BASE_DIR = Path(__file__).resolve().parent.parent
+
+
+# ==========================================
+# BANCO DE DADOS
+# ==========================================
+
+DATA_DIR = BASE_DIR / "data"
+
+DATA_DIR.mkdir(
+    exist_ok=True
 )
 
-# cria a fábrica de sessões
+DATABASE_PATH = DATA_DIR / "estoque.db"
+
+
+DATABASE_URL = (
+    f"sqlite:///{DATABASE_PATH}"
+)
+
+
+# ==========================================
+# ENGINE
+# ==========================================
+
+engine = create_engine(
+    DATABASE_URL,
+    echo=False,
+    connect_args={
+        "check_same_thread": False
+    }
+)
+
+
+# ==========================================
+# SESSÃO
+# ==========================================
+
 SessionLocal = sessionmaker(
     autocommit=False,
     autoflush=False,
     bind=engine
 )
 
-# classe base para todos os modelos
+
+# ==========================================
+# BASE DOS MODELS
+# ==========================================
+
 base = declarative_base()

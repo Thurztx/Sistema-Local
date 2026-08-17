@@ -1,70 +1,125 @@
-# Importação de bibliotecas
 from sqlalchemy import (
     Column,
     Integer,
     String,
     Float,
     Boolean,
-    DateTime,
-    ForeignKey,
     Text
 )
 
 from sqlalchemy.orm import relationship
 
-from datetime import datetime
-
 from config.database import base
 
-# Classe "produto"
+
 class Produto(base):
-        # nome da tabela 
+
     __tablename__ = "produtos"
-        # ID do produto
-    id = Column(Integer, primary_key=True)
-        # Nome do produto
-    nome = Column(String(150), nullable=False)
-        # descrição do produto
-    descricao = Column(Text)
-        # marca do produto
-    marca = Column(String(50))
-        # modelo do produto
-    modelo = Column(String(50))
-        # cor
-    cor = Column(String(30))
-        # tamanho 
-    tamanho = Column(String(10))
-        # Preço de custo fabricação/compra
-    preco_custo = Column(Float, nullable=False)
-        # Preço de venda
-    preco_venda = Column(Float, nullable=False)
-        # quantidade
-    quantidade = Column(Integer, default=0)
-        # Estoque minímo
-    estoque_minimo = Column(Integer, default=5)
-        # Cód de barras
-    codigo_barras = Column(String(50), unique=True)
-        # Status
-    status = Column(Boolean, default=True)
 
+    # ==========================================
+    # ID
+    # ==========================================
 
-# RELACIONAMENTO ENTRE TABELAS
-entradas = relationship(
-    "Entrada",
-    back_populates="produto"
-)
+    id = Column(
+        Integer,
+        primary_key=True
+    )
 
-saidas = relationship(
-    "Saida",
-    back_populates="produto"
-)
+    # ==========================================
+    # DADOS DO PRODUTO
+    # ==========================================
 
-movimentacoes = relationship(
-    "Movimentacao",
-    back_populates="produto"
-)
+    nome = Column(
+        String(150),
+        nullable=False
+    )
 
-itens_compra = relationship(
-    "ItemCompra",
-    back_populates="produto"
-)
+    descricao = Column(
+        Text
+    )
+
+    marca = Column(
+        String(50)
+    )
+
+    modelo = Column(
+        String(50)
+    )
+
+    cor = Column(
+        String(30)
+    )
+
+    tamanho = Column(
+        String(10)
+    )
+
+    # ==========================================
+    # VALORES
+    # ==========================================
+
+    preco_custo = Column(
+        Float,
+        nullable=False
+    )
+
+    preco_venda = Column(
+        Float,
+        nullable=False
+    )
+
+    # ==========================================
+    # ESTOQUE
+    # ==========================================
+
+    quantidade = Column(
+        Integer,
+        default=0
+    )
+
+    estoque_minimo = Column(
+        Integer,
+        default=5
+    )
+
+    # ==========================================
+    # IDENTIFICAÇÃO
+    # ==========================================
+
+    codigo_barras = Column(
+        String(50),
+        unique=True
+    )
+
+    # ==========================================
+    # STATUS
+    # ==========================================
+
+    status = Column(
+        Boolean,
+        default=True
+    )
+
+    # ==========================================
+    # RELACIONAMENTOS
+    # ==========================================
+
+    entradas = relationship(
+        "Entrada",
+        back_populates="produto"
+    )
+
+    saidas = relationship(
+        "Saida",
+        back_populates="produto"
+    )
+
+    movimentacoes = relationship(
+        "Movimentacao",
+        back_populates="produto"
+    )
+
+    itens_compra = relationship(
+        "ItemCompra",
+        back_populates="produto"
+    )
