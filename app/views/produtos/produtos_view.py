@@ -1,44 +1,58 @@
 import customtkinter as ctk
 
-from datetime import datetime
 
-import customtkinter as ctk
+class ProdutoView(ctk.CTkFrame):
 
-from datetime import datetime
+    # ================================================================
+    # CORES ARYN
+    # ================================================================
 
-from app.theme.theme_manager import ThemeManager
-from app.theme.fonts import Fonts
+    RED = "#C8102E"
+    RED_DARK = "#A50D25"
+    RED_LIGHT = "#FCE7EB"
 
-from app.views.produtos.produto_form import ProdutoForm
+    BLACK = "#0A0A0A"
+    WHITE = "#FFFFFF"
 
+    BACKGROUND = "#F5F5F5"
 
-class ProdutosView(ctk.CTkFrame):
+    TEXT = "#111111"
+    TEXT_SECONDARY = "#666666"
 
-    def __init__(self, master, controller=None):
+    BORDER = "#E5E5E5"
 
-        super().__init__(master)
+    # ================================================================
+    # CONSTRUTOR
+    # ================================================================
 
-        self.controller = controller
+    def __init__(self, master, **kwargs):
 
-        self.colors = ThemeManager.colors()
-
-        self.configure(
-            fg_color=self.colors.BACKGROUND
+        super().__init__(
+            master,
+            fg_color=self.BACKGROUND,
+            corner_radius=0,
+            **kwargs
         )
 
+        # Configuração do Grid
+        self.grid_columnconfigure(
+            0,
+            weight=1
+        )
+
+        self.grid_rowconfigure(
+            2,
+            weight=1
+        )
+
+        # Criar componentes
         self.create_header()
+        self.create_summary()
+        self.create_products_area()
 
-        self.create_search()
-
-        self.create_filters()
-
-        self.create_table()
-
-        self.create_pagination()
-
-    # ==========================================================
+    # ================================================================
     # CABEÇALHO
-    # ==========================================================
+    # ================================================================
 
     def create_header(self):
 
@@ -51,8 +65,8 @@ class ProdutosView(ctk.CTkFrame):
             row=0,
             column=0,
             sticky="ew",
-            padx=30,
-            pady=(25, 15)
+            padx=35,
+            pady=(30, 15)
         )
 
         self.header.grid_columnconfigure(
@@ -60,630 +74,731 @@ class ProdutosView(ctk.CTkFrame):
             weight=1
         )
 
-        # ==========================================
-        # ESQUERDA
-        # ==========================================
+        # Título
 
-        left = ctk.CTkFrame(
+        self.title = ctk.CTkLabel(
             self.header,
-            fg_color="transparent"
+            text="Produtos",
+            font=ctk.CTkFont(
+                family="Arial",
+                size=30,
+                weight="bold"
+            ),
+            text_color=self.TEXT
         )
 
-        left.grid(
+        self.title.grid(
             row=0,
             column=0,
             sticky="w"
         )
 
-        titulo = ctk.CTkLabel(
-            left,
-            text="Produtos",
-            font=Fonts.title(),
-            text_color=self.colors.TEXT
-        )
+        # Subtítulo
 
-        titulo.pack(
-            anchor="w"
-        )
-
-        descricao = ctk.CTkLabel(
-            left,
-            text="Gerencie todos os produtos cadastrados.",
-            font=Fonts.body(),
-            text_color=self.colors.TEXT_SECONDARY
-        )
-
-        descricao.pack(
-            anchor="w",
-            pady=(5, 0)
-        )
-
-        # ==========================================
-        # DIREITA
-        # ==========================================
-
-        right = ctk.CTkFrame(
+        self.subtitle = ctk.CTkLabel(
             self.header,
-            fg_color="transparent"
-        )
-
-        right.grid(
-            row=0,
-            column=1,
-            sticky="e"
-        )
-
-        self.lbl_update = ctk.CTkLabel(
-            right,
-            text=(
-                "Última atualização: "
-                f"{datetime.now().strftime('%d/%m/%Y %H:%M')}"
+            text="Gerencie os produtos cadastrados no estoque",
+            font=ctk.CTkFont(
+                size=13
             ),
-            font=Fonts.small(),
-            text_color=self.colors.TEXT_SECONDARY
+            text_color=self.TEXT_SECONDARY
         )
 
-        self.lbl_update.pack(
-            anchor="e",
-            pady=(0, 10)
+        self.subtitle.grid(
+            row=1,
+            column=0,
+            sticky="w",
+            pady=(3, 0)
         )
 
-        buttons = ctk.CTkFrame(
-            right,
-            fg_color="transparent"
-        )
+        # ============================================================
+        # BOTÃO NOVO PRODUTO
+        # ============================================================
 
-        buttons.pack(
-            anchor="e"
-        )
-
-        self.btn_refresh = ctk.CTkButton(
-            buttons,
-            text="🔄 Atualizar",
-            width=140,
-            height=38,
-            font=Fonts.button(),
-            command=self.refresh_products
-        )
-
-        self.btn_refresh.pack(
-            side="left",
-            padx=(0, 10)
-        )
-
-        self.btn_new = ctk.CTkButton(
-            buttons,
-            text="➕ Novo Produto",
-            width=170,
-            height=38,
-            font=Fonts.button(),
+        self.new_product_button = ctk.CTkButton(
+            self.header,
+            text="+  Novo Produto",
+            width=150,
+            height=42,
+            corner_radius=8,
+            fg_color=self.RED,
+            hover_color=self.RED_DARK,
+            text_color=self.WHITE,
+            font=ctk.CTkFont(
+                size=13,
+                weight="bold"
+            ),
             command=self.new_product
         )
 
-        self.btn_new.pack(
-            side="left"
+        self.new_product_button.grid(
+            row=0,
+            column=1,
+            rowspan=2,
+            padx=(20, 0)
         )
 
-    # ==========================================================
-    # PESQUISA
-    # ==========================================================
+    # ================================================================
+    # RESUMO
+    # ================================================================
 
-    def create_search(self):
+    def create_summary(self):
 
-        self.search_frame = ctk.CTkFrame(
+        self.summary = ctk.CTkFrame(
             self,
             fg_color="transparent"
         )
 
-        self.search_frame.grid(
+        self.summary.grid(
             row=1,
             column=0,
             sticky="ew",
-            padx=30,
-            pady=(0, 15)
+            padx=35,
+            pady=(5, 20)
         )
 
-        self.search_frame.grid_columnconfigure(
+        for column in range(3):
+
+            self.summary.grid_columnconfigure(
+                column,
+                weight=1
+            )
+
+        # Total
+
+        self.create_summary_card(
+            self.summary,
+            0,
+            "Total de Produtos",
+            "1.248"
+        )
+
+        # Ativos
+
+        self.create_summary_card(
+            self.summary,
+            1,
+            "Produtos Ativos",
+            "1.216"
+        )
+
+        # Estoque baixo
+
+        self.create_summary_card(
+            self.summary,
+            2,
+            "Estoque Baixo",
+            "32"
+        )
+
+    # ================================================================
+    # CARD DE RESUMO
+    # ================================================================
+
+    def create_summary_card(
+        self,
+        parent,
+        column,
+        title,
+        value
+    ):
+
+        card = ctk.CTkFrame(
+            parent,
+            fg_color=self.WHITE,
+            corner_radius=10,
+            border_width=1,
+            border_color=self.BORDER,
+            height=85
+        )
+
+        card.grid(
+            row=0,
+            column=column,
+            sticky="ew",
+            padx=5
+        )
+
+        card.grid_propagate(False)
+
+        card.grid_columnconfigure(
             0,
             weight=1
         )
 
+        title_label = ctk.CTkLabel(
+            card,
+            text=title,
+            font=ctk.CTkFont(
+                size=11,
+                weight="bold"
+            ),
+            text_color=self.TEXT_SECONDARY
+        )
+
+        title_label.grid(
+            row=0,
+            column=0,
+            sticky="w",
+            padx=15,
+            pady=(12, 0)
+        )
+
+        value_label = ctk.CTkLabel(
+            card,
+            text=value,
+            font=ctk.CTkFont(
+                size=22,
+                weight="bold"
+            ),
+            text_color=self.TEXT
+        )
+
+        value_label.grid(
+            row=1,
+            column=0,
+            sticky="w",
+            padx=15,
+            pady=(0, 10)
+        )
+
+    # ================================================================
+    # ÁREA DE PRODUTOS
+    # ================================================================
+
+    def create_products_area(self):
+
+        self.products_area = ctk.CTkFrame(
+            self,
+            fg_color=self.WHITE,
+            corner_radius=12,
+            border_width=1,
+            border_color=self.BORDER
+        )
+
+        self.products_area.grid(
+            row=2,
+            column=0,
+            sticky="nsew",
+            padx=35,
+            pady=(0, 25)
+        )
+
+        self.products_area.grid_columnconfigure(
+            0,
+            weight=1
+        )
+
+        self.products_area.grid_rowconfigure(
+            2,
+            weight=1
+        )
+
+        # ============================================================
+        # BARRA SUPERIOR
+        # ============================================================
+
+        self.toolbar = ctk.CTkFrame(
+            self.products_area,
+            fg_color="transparent"
+        )
+
+        self.toolbar.grid(
+            row=0,
+            column=0,
+            sticky="ew",
+            padx=20,
+            pady=20
+        )
+
+        self.toolbar.grid_columnconfigure(
+            0,
+            weight=1
+        )
+
+        # Busca
+
         self.search_entry = ctk.CTkEntry(
-            self.search_frame,
+            self.toolbar,
+            placeholder_text="Pesquisar produto...",
             height=40,
-            placeholder_text=(
-                "Pesquisar por código, nome, categoria ou marca..."
-            )
+            width=350,
+            corner_radius=8,
+            border_width=1,
+            border_color=self.BORDER
         )
 
         self.search_entry.grid(
             row=0,
             column=0,
-            sticky="ew"
+            sticky="w"
         )
 
-        self.search_entry.bind(
-            "<Return>",
-            lambda event: self.search_products()
-        )
+        # Filtro
 
-        self.btn_search = ctk.CTkButton(
-            self.search_frame,
-            text="Pesquisar",
-            width=120,
+        self.category_filter = ctk.CTkComboBox(
+            self.toolbar,
+            values=[
+                "Todas as categorias",
+                "Camisetas",
+                "Calças",
+                "Moletons",
+                "Bonés",
+                "Acessórios"
+            ],
+            width=180,
             height=40,
+            corner_radius=8,
+            border_width=1,
+            border_color=self.BORDER,
+            button_color=self.RED,
+            button_hover_color=self.RED_DARK
+        )
+
+        self.category_filter.grid(
+            row=0,
+            column=1,
+            padx=10
+        )
+
+        self.category_filter.set(
+            "Todas as categorias"
+        )
+
+        # Botão pesquisar
+
+        self.search_button = ctk.CTkButton(
+            self.toolbar,
+            text="Pesquisar",
+            width=110,
+            height=40,
+            corner_radius=8,
+            fg_color=self.BLACK,
+            hover_color="#222222",
+            text_color=self.WHITE,
             command=self.search_products
         )
 
-        self.btn_search.grid(
+        self.search_button.grid(
             row=0,
-            column=1,
-            padx=(10, 0)
+            column=2
         )
 
-    # ==========================================================
-    # TABELA
-    # ==========================================================
-
-    def create_table(self):
-
-        self.table_container = ctk.CTkFrame(
-            self,
-            fg_color=self.colors.SURFACE,
-            corner_radius=10
-        )
-
-        self.table_container.grid(
-            row=2,
-            column=0,
-            sticky="nsew",
-            padx=30,
-            pady=(0, 15)
-        )
-
-        self.table_container.grid_rowconfigure(
-            1,
-            weight=1
-        )
-
-        self.table_container.grid_columnconfigure(
-            0,
-            weight=1
-        )
-
-        # ==========================================
+        # ============================================================
         # CABEÇALHO DA TABELA
-        # ==========================================
+        # ============================================================
 
         self.table_header = ctk.CTkFrame(
-            self.table_container,
-            fg_color=self.colors.TABLE_HEADER,
-            corner_radius=8
+            self.products_area,
+            fg_color="#FAFAFA",
+            height=42,
+            corner_radius=0
         )
 
         self.table_header.grid(
-            row=0,
+            row=1,
             column=0,
             sticky="ew",
-            padx=10,
-            pady=10
+            padx=1
         )
 
         columns = [
-            "Código",
-            "Produto",
-            "Categoria",
-            "Tamanho",
-            "Estoque",
-            "Custo",
-            "Venda",
-            "Status"
+            ("Código", 0),
+            ("Produto", 1),
+            ("Categoria", 2),
+            ("Preço", 3),
+            ("Estoque", 4),
+            ("Status", 5),
+            ("Ações", 6)
         ]
 
-        for index, column in enumerate(columns):
+        column_weights = [
+            1,
+            3,
+            2,
+            1,
+            1,
+            1,
+            2
+        ]
+
+        for index, weight in enumerate(column_weights):
 
             self.table_header.grid_columnconfigure(
                 index,
-                weight=1
+                weight=weight
             )
+
+        for text, column in columns:
 
             label = ctk.CTkLabel(
                 self.table_header,
-                text=column,
-                font=Fonts.label(),
-                text_color=self.colors.TEXT_SECONDARY
+                text=text,
+                font=ctk.CTkFont(
+                    size=10,
+                    weight="bold"
+                ),
+                text_color="#777777"
             )
 
             label.grid(
                 row=0,
-                column=index,
-                sticky="ew",
-                padx=5,
-                pady=12
+                column=column,
+                sticky="w",
+                padx=12,
+                pady=10
             )
 
-        # ==========================================
-        # CORPO
-        # ==========================================
+        # ============================================================
+        # TABELA
+        # ============================================================
 
-        self.table_body = ctk.CTkScrollableFrame(
-            self.table_container,
-            fg_color="transparent"
+        self.table = ctk.CTkScrollableFrame(
+            self.products_area,
+            fg_color=self.WHITE,
+            corner_radius=0
         )
 
-        self.table_body.grid(
-            row=1,
+        self.table.grid(
+            row=2,
             column=0,
             sticky="nsew",
-            padx=10,
-            pady=(0, 10)
+            padx=1,
+            pady=1
         )
 
-    # ==========================================================
-    # RODAPÉ
-    # ==========================================================
+        self.create_product_rows()
 
-    def create_footer(self):
+    # ================================================================
+    # PRODUTOS TEMPORÁRIOS
+    # ================================================================
 
-        self.footer = ctk.CTkFrame(
-            self,
-            fg_color="transparent"
-        )
+    def create_product_rows(self):
 
-        self.footer.grid(
-            row=3,
-            column=0,
-            sticky="ew",
-            padx=30,
-            pady=(0, 20)
-        )
+        products = [
 
-        self.total_label = ctk.CTkLabel(
-            self.footer,
-            text="0 produtos encontrados",
-            font=Fonts.body(),
-            text_color=self.colors.TEXT_SECONDARY
-        )
+            (
+                "001",
+                "Camiseta Oversized Preta",
+                "Camisetas",
+                "R$ 89,90",
+                "35",
+                "Disponível"
+            ),
 
-        self.total_label.pack(
-            side="left"
-        )
+            (
+                "002",
+                "Camiseta Básica Branca",
+                "Camisetas",
+                "R$ 59,90",
+                "12",
+                "Disponível"
+            ),
 
-    # ==========================================================
-    # CARREGAR PRODUTOS
-    # ==========================================================
+            (
+                "003",
+                "Calça Cargo Bege",
+                "Calças",
+                "R$ 149,90",
+                "8",
+                "Estoque baixo"
+            ),
 
-    def load_products(self):
+            (
+                "004",
+                "Moletom ARYN Preto",
+                "Moletons",
+                "R$ 179,90",
+                "0",
+                "Sem estoque"
+            ),
 
-        if self.controller is None:
+            (
+                "005",
+                "Boné ARYN",
+                "Bonés",
+                "R$ 79,90",
+                "24",
+                "Disponível"
+            ),
 
-            self.show_empty_state(
-                "Controller de produtos não configurado."
+            (
+                "006",
+                "Calça Cargo Preta",
+                "Calças",
+                "R$ 149,90",
+                "3",
+                "Estoque baixo"
+            ),
+
+            (
+                "007",
+                "Moletom Cinza ARYN",
+                "Moletons",
+                "R$ 179,90",
+                "15",
+                "Disponível"
             )
+        ]
 
-            return
-
-        try:
-
-            self.produtos = (
-                self.controller.get_products()
-            )
-
-            self.update_table(
-                self.produtos
-            )
-
-            self.update_last_update()
-
-        except Exception as erro:
-
-            print(
-                f"Erro ao carregar produtos: {erro}"
-            )
-
-            self.show_empty_state(
-                "Não foi possível carregar os produtos."
-            )
-
-    # ==========================================================
-    # ATUALIZAR TABELA
-    # ==========================================================
-
-    def update_table(
-        self,
-        produtos
-    ):
-
-        for widget in self.table_body.winfo_children():
-
-            widget.destroy()
-
-        self.total_label.configure(
-            text=f"{len(produtos)} produtos encontrados"
-        )
-
-        if not produtos:
-
-            self.show_empty_state()
-
-            return
-
-        for produto in produtos:
+        for row, product in enumerate(products):
 
             self.create_product_row(
-                produto
+                row,
+                product
             )
 
-    # ==========================================================
-    # LINHA DO PRODUTO
-    # ==========================================================
+    # ================================================================
+    # LINHA DE PRODUTO
+    # ================================================================
 
     def create_product_row(
         self,
-        produto
+        row,
+        product
     ):
 
-        row = ctk.CTkFrame(
-            self.table_body,
-            fg_color=self.colors.TABLE_ROW,
-            corner_radius=6
+        code, name, category, price, stock, status = product
+
+        frame = ctk.CTkFrame(
+            self.table,
+            fg_color=self.WHITE,
+            corner_radius=0,
+            height=55
         )
 
-        row.pack(
+        frame.pack(
             fill="x",
-            pady=3
+            padx=0,
+            pady=0
         )
 
-        # ------------------------------------------
-        # Recuperar valor
-        # ------------------------------------------
-
-        def get_value(
-            key,
-            default="-"
+        for column, weight in enumerate(
+            [1, 3, 2, 1, 1, 1, 2]
         ):
 
-            if isinstance(produto, dict):
-
-                return produto.get(
-                    key,
-                    default
-                )
-
-            return getattr(
-                produto,
-                key,
-                default
+            frame.grid_columnconfigure(
+                column,
+                weight=weight
             )
 
-        # ------------------------------------------
-        # Valores
-        # ------------------------------------------
+        # Código
 
-        codigo = get_value(
-            "codigo"
-        )
-
-        nome = get_value(
-            "nome"
-        )
-
-        categoria = get_value(
-            "categoria"
-        )
-
-        tamanho = get_value(
-            "tamanho"
-        )
-
-        quantidade = get_value(
-            "quantidade",
+        self.create_table_label(
+            frame,
+            code,
             0
         )
 
-        preco_custo = get_value(
-            "preco_custo",
-            0
+        # Produto
+
+        self.create_table_label(
+            frame,
+            name,
+            1,
+            bold=True
         )
 
-        preco_venda = get_value(
-            "preco_venda",
-            0
+        # Categoria
+
+        self.create_table_label(
+            frame,
+            category,
+            2
         )
 
-        status = get_value(
-            "status",
-            "Ativo"
+        # Preço
+
+        self.create_table_label(
+            frame,
+            price,
+            3
         )
 
-        valores = [
-            codigo,
-            nome,
-            categoria,
-            tamanho,
-            quantidade,
-            self.format_currency(preco_custo),
-            self.format_currency(preco_venda),
-            status
-        ]
+        # Estoque
 
-        # ------------------------------------------
-        # Criar colunas
-        # ------------------------------------------
+        stock_color = self.TEXT
 
-        for index, valor in enumerate(valores):
+        if int(stock) == 0:
+            stock_color = self.RED
 
-            label = ctk.CTkLabel(
-                row,
-                text=str(valor),
-                font=Fonts.body(),
-                text_color=self.colors.TEXT,
-                anchor="w"
-            )
+        elif int(stock) <= 5:
+            stock_color = self.RED
 
-            label.pack(
-                side="left",
-                expand=True,
-                fill="x",
-                padx=8,
-                pady=12
-            )
-
-            label.bind(
-                "<Double-Button-1>",
-                lambda event,
-                p=produto:
-                self.edit_product(p)
-            )
-
-        # ------------------------------------------
-        # Clique na linha
-        # ------------------------------------------
-
-        row.bind(
-            "<Double-Button-1>",
-            lambda event:
-            self.edit_product(produto)
+        stock_label = ctk.CTkLabel(
+            frame,
+            text=stock,
+            font=ctk.CTkFont(
+                size=11,
+                weight="bold"
+            ),
+            text_color=stock_color
         )
 
-    # ==========================================================
-    # ESTADO VAZIO
-    # ==========================================================
+        stock_label.grid(
+            row=0,
+            column=4,
+            sticky="w",
+            padx=12,
+            pady=8
+        )
 
-    def show_empty_state(
+        # Status
+
+        if status == "Disponível":
+
+            status_color = "#198754"
+
+        else:
+
+            status_color = self.RED
+
+        status_label = ctk.CTkLabel(
+            frame,
+            text=status,
+            font=ctk.CTkFont(
+                size=10,
+                weight="bold"
+            ),
+            text_color=status_color
+        )
+
+        status_label.grid(
+            row=0,
+            column=5,
+            sticky="w",
+            padx=12
+        )
+
+        # ============================================================
+        # AÇÕES
+        # ============================================================
+
+        actions_frame = ctk.CTkFrame(
+            frame,
+            fg_color="transparent"
+        )
+
+        actions_frame.grid(
+            row=0,
+            column=6,
+            sticky="w",
+            padx=8
+        )
+
+        edit_button = ctk.CTkButton(
+            actions_frame,
+            text="Editar",
+            width=60,
+            height=30,
+            corner_radius=6,
+            fg_color=self.BLACK,
+            hover_color="#222222",
+            font=ctk.CTkFont(
+                size=10,
+                weight="bold"
+            ),
+            command=lambda: self.edit_product(code)
+        )
+
+        edit_button.pack(
+            side="left",
+            padx=2
+        )
+
+        delete_button = ctk.CTkButton(
+            actions_frame,
+            text="Excluir",
+            width=60,
+            height=30,
+            corner_radius=6,
+            fg_color=self.RED,
+            hover_color=self.RED_DARK,
+            font=ctk.CTkFont(
+                size=10,
+                weight="bold"
+            ),
+            command=lambda: self.delete_product(code)
+        )
+
+        delete_button.pack(
+            side="left",
+            padx=2
+        )
+
+    # ================================================================
+    # LABEL DA TABELA
+    # ================================================================
+
+    def create_table_label(
         self,
-        mensagem="Nenhum produto cadastrado."
+        parent,
+        text,
+        column,
+        bold=False
     ):
 
-        for widget in self.table_body.winfo_children():
-
-            widget.destroy()
-
         label = ctk.CTkLabel(
-            self.table_body,
-            text=mensagem,
-            font=Fonts.body(),
-            text_color=self.colors.TEXT_SECONDARY
+            parent,
+            text=text,
+            font=ctk.CTkFont(
+                size=11,
+                weight="bold" if bold else "normal"
+            ),
+            text_color=self.TEXT
         )
 
-        label.pack(
-            pady=60
+        label.grid(
+            row=0,
+            column=column,
+            sticky="w",
+            padx=12,
+            pady=8
         )
 
-        self.total_label.configure(
-            text="0 produtos encontrados"
-        )
-
-    # ==========================================================
+    # ================================================================
     # NOVO PRODUTO
-    # ==========================================================
+    # ================================================================
 
     def new_product(self):
 
-        ProdutoForm(
-            self.winfo_toplevel(),
-            controller=self.controller
-        )
+        print("Novo produto")
 
-    # ==========================================================
-    # EDITAR PRODUTO
-    # ==========================================================
-
-    def edit_product(
-        self,
-        produto
-    ):
-
-        ProdutoForm(
-            self.winfo_toplevel(),
-            controller=self.controller,
-            produto=produto
-        )
-
-    # ==========================================================
+    # ================================================================
     # PESQUISAR
-    # ==========================================================
+    # ================================================================
 
     def search_products(self):
 
-        if self.controller is None:
+        search = self.search_entry.get()
 
-            return
+        category = self.category_filter.get()
 
-        texto = (
-            self.search_entry
-            .get()
-            .strip()
+        print(
+            "Pesquisar:",
+            search,
+            "| Categoria:",
+            category
         )
 
-        if not texto:
+    # ================================================================
+    # EDITAR PRODUTO
+    # ================================================================
 
-            self.load_products()
+    def edit_product(self, code):
 
-            return
-
-        try:
-
-            produtos = (
-                self.controller.search_products(
-                    texto
-                )
-            )
-
-            self.update_table(
-                produtos
-            )
-
-        except Exception as erro:
-
-            print(
-                f"Erro ao pesquisar produtos: {erro}"
-            )
-
-    # ==========================================================
-    # ATUALIZAR
-    # ==========================================================
-
-    def refresh_products(self):
-
-        self.load_products()
-
-    # ==========================================================
-    # DATA DA ATUALIZAÇÃO
-    # ==========================================================
-
-    def update_last_update(self):
-
-        self.lbl_update.configure(
-            text=(
-                "Última atualização: "
-                f"{datetime.now().strftime('%d/%m/%Y %H:%M')}"
-            )
+        print(
+            "Editar produto:",
+            code
         )
 
-    # ==========================================================
-    # FORMATAR MOEDA
-    # ==========================================================
+    # ================================================================
+    # EXCLUIR PRODUTO
+    # ================================================================
 
-    def format_currency(
-        self,
-        value
-    ):
+    def delete_product(self, code):
 
-        try:
-
-            value = float(value)
-
-        except (
-            TypeError,
-            ValueError
-        ):
-
-            value = 0
-
-        return (
-            f"R$ {value:,.2f}"
-            .replace(",", "X")
-            .replace(".", ",")
-            .replace("X", ".")
+        print(
+            "Excluir produto:",
+            code
         )

@@ -1,85 +1,48 @@
 import customtkinter as ctk
 
-from app.views.compras.compras_view import ComprasView
-from app.views.produtos.produtos_view import ProdutosView
+from app.views.components.sidebar import Sidebar
+from app.views.dashboard.dashboard_view import Dashboard
+from app.views.produtos.produto_view import ProdutoView
 
-from app.controllers.compra_controller import CompraController
-from app.controllers.produto_controller import ProdutoController
-
-from app.theme.theme_manager import ThemeManager
-from app.theme.fonts import Fonts
 
 class MainWindow(ctk.CTk):
 
     def __init__(self):
-
         super().__init__()
 
-        # ==============================
-        # CONFIGURAÇÃO DA JANELA
-        # ==============================
+        # ============================================================
+        # CONFIGURAÇÕES
+        # ============================================================
+
+        ctk.set_appearance_mode("light")
+        ctk.set_default_color_theme("blue")
 
         self.title("ARYN - Controle de Estoque")
         self.geometry("1700x900")
         self.minsize(1200, 700)
 
-        self.configure(
-            fg_color="#F5F5F5"
-        )
+        # ============================================================
+        # GRID PRINCIPAL
+        # ============================================================
 
-        # ==============================
-        # CONFIGURAÇÃO DA GRID
-        # ==============================
+        self.grid_rowconfigure(0, weight=1)
+        self.grid_columnconfigure(1, weight=1)
 
-        self.grid_columnconfigure(
-            0,
-            weight=0
-        )
+        # ============================================================
+        # SIDEBAR
+        # ============================================================
 
-        self.grid_columnconfigure(
-            1,
-            weight=1
-        )
-
-        self.grid_rowconfigure(
-            0,
-            weight=1
-        )
-
-        # ==============================
-        # VARIÁVEL DA TELA ATUAL
-        # ==============================
-
-        self.tela_atual = None
-
-        # ==============================
-        # CONTROLLERS
-        # ==============================
-
-        self.compra_controller = CompraController()
-        self.produto_controller = ProdutoController()
-
-        # ==============================
-        # CRIA INTERFACE
-        # ==============================
-
-        self.criar_sidebar()
-        self.criar_area_conteudo()
-
-        # ==============================
-        # ABRE DASHBOARD INICIAL
-        # ==============================
-
-        self.mostrar_dashboard()
-
-# SIDEBAR
-    def criar_sidebar(self):
-
-        self.sidebar = ctk.CTkFrame(
+        self.sidebar = Sidebar(
             self,
-            width=250,
-            corner_radius=0,
-            fg_color="#111111"
+
+            on_dashboard=self.show_dashboard,
+            on_products=self.open_products,
+            on_categories=self.open_categories,
+            on_suppliers=self.open_suppliers,
+            on_purchases=self.open_purchases,
+            on_sales=self.open_sales,
+            on_reports=self.open_reports,
+            on_settings=self.open_settings
         )
 
         self.sidebar.grid(
@@ -88,392 +51,275 @@ class MainWindow(ctk.CTk):
             sticky="nsew"
         )
 
-        self.sidebar.grid_propagate(False)
+        # ============================================================
+        # ÁREA DE CONTEÚDO
+        # ============================================================
 
-        # --------------------------------
-        # LOGO / NOME
-        # --------------------------------
-
-        self.logo = ctk.CTkLabel(
-            self.sidebar,
-            text="ARYN",
-            font=ctk.CTkFont(
-                size=32,
-                weight="bold"
-            ),
-            text_color="#FFFFFF"
-        )
-
-        self.logo.pack(
-            pady=(35, 5)
-        )
-
-        self.logo_subtitulo = ctk.CTkLabel(
-            self.sidebar,
-            text="CONTROLE DE ESTOQUE",
-            font=ctk.CTkFont(
-                size=11,
-                weight="bold"
-            ),
-            text_color="#888888"
-        )
-
-        self.logo_subtitulo.pack(
-            pady=(0, 35)
-        )
-
-        # --------------------------------
-        # BOTÕES
-        # --------------------------------
-
-        self.criar_botao_menu(
-            "Dashboard",
-            self.mostrar_dashboard
-        )
-
-        self.criar_botao_menu(
-            "Produtos",
-            self.mostrar_produtos
-        )
-
-        self.criar_botao_menu(
-            "Clientes",
-            self.mostrar_clientes
-        )
-
-        self.criar_botao_menu(
-            "Fornecedores",
-            self.mostrar_fornecedores
-        )
-
-        self.criar_botao_menu(
-            "Compras",
-            self.mostrar_compras
-        )
-
-        self.criar_botao_menu(
-            "Entradas",
-            self.mostrar_entradas
-        )
-
-        self.criar_botao_menu(
-            "Saídas",
-            self.mostrar_saidas
-        )
-
-        self.criar_botao_menu(
-            "Usuários",
-            self.mostrar_usuarios
-        )
-
-    # ==========================================================
-    # BOTÃO DO MENU
-    # ==========================================================
-
-    def criar_botao_menu(
-        self,
-        texto,
-        comando
-    ):
-
-        botao = ctk.CTkButton(
-            self.sidebar,
-            text=texto,
-            command=comando,
-            height=45,
-            corner_radius=8,
-            fg_color="transparent",
-            hover_color="#2A2A2A",
-            text_color="#FFFFFF",
-            anchor="w"
-        )
-
-        botao.pack(
-            fill="x",
-            padx=15,
-            pady=4
-        )
-
-# ÁREA DE CONTEÚDO
-    def criar_area_conteudo(self):
-
-        self.area_conteudo = ctk.CTkFrame(
+        self.content = ctk.CTkFrame(
             self,
-            corner_radius=0,
-            fg_color="#F5F5F5"
+            fg_color="#F5F5F5",
+            corner_radius=0
         )
 
-        self.area_conteudo.grid(
+        self.content.grid(
             row=0,
             column=1,
             sticky="nsew"
         )
 
-        self.area_conteudo.grid_rowconfigure(
+        self.content.grid_rowconfigure(
             0,
             weight=1
         )
 
-        self.area_conteudo.grid_columnconfigure(
+        self.content.grid_columnconfigure(
             0,
             weight=1
         )
 
-# LIMPAR ÁREA DE CONTEÚDO
-    def limpar_conteudo(self):
+        # ============================================================
+        # ABRIR DASHBOARD INICIALMENTE
+        # ============================================================
 
-        if self.tela_atual is not None:
+        self.show_dashboard()
 
-            self.tela_atual.destroy()
+    # ================================================================
+    # LIMPAR CONTEÚDO
+    # ================================================================
 
-            self.tela_atual = None
-    
-# DASHBOARD
-    def mostrar_dashboard(self):
+    def clear_content(self):
 
-        self.limpar_conteudo()
+        for widget in self.content.winfo_children():
+            widget.destroy()
 
-        self.tela_atual = ctk.CTkFrame(
-            self.area_conteudo,
+    # ================================================================
+    # DASHBOARD
+    # ================================================================
+
+    def show_dashboard(self):
+
+        self.clear_content()
+
+        dashboard = Dashboard(
+            self.content
+        )
+
+        dashboard.grid(
+            row=0,
+            column=0,
+            sticky="nsew"
+        )
+
+        self.sidebar.set_active(
+            self.sidebar.dashboard_button
+        )
+
+    # ================================================================
+    # PRODUTOS
+    # ================================================================
+
+    def open_products(self):
+
+        self.clear_content()
+
+        produto_view = ProdutoView(
+            self.content
+        )
+
+        produto_view.grid(
+            row=0,
+            column=0,
+            sticky="nsew"
+        )
+
+        self.sidebar.set_active(
+            self.sidebar.products_button
+        )
+
+    # ================================================================
+    # CATEGORIAS
+    # ================================================================
+
+    def open_categories(self):
+
+        self.clear_content()
+
+        self.sidebar.set_active(
+            self.sidebar.categories_button
+        )
+
+        self.show_placeholder(
+            "Categorias",
+            "Gerenciamento de categorias"
+        )
+
+    # ================================================================
+    # FORNECEDORES
+    # ================================================================
+
+    def open_suppliers(self):
+
+        self.clear_content()
+
+        self.sidebar.set_active(
+            self.sidebar.suppliers_button
+        )
+
+        self.show_placeholder(
+            "Fornecedores",
+            "Gerenciamento de fornecedores"
+        )
+
+    # ================================================================
+    # COMPRAS
+    # ================================================================
+
+    def open_purchases(self):
+
+        self.clear_content()
+
+        self.sidebar.set_active(
+            self.sidebar.purchases_button
+        )
+
+        self.show_placeholder(
+            "Compras",
+            "Gerenciamento de compras"
+        )
+
+    # ================================================================
+    # VENDAS
+    # ================================================================
+
+    def open_sales(self):
+
+        self.clear_content()
+
+        self.sidebar.set_active(
+            self.sidebar.sales_button
+        )
+
+        self.show_placeholder(
+            "Vendas",
+            "Gerenciamento de vendas"
+        )
+
+    # ================================================================
+    # RELATÓRIOS
+    # ================================================================
+
+    def open_reports(self):
+
+        self.clear_content()
+
+        self.sidebar.set_active(
+            self.sidebar.reports_button
+        )
+
+        self.show_placeholder(
+            "Relatórios",
+            "Relatórios do sistema"
+        )
+
+    # ================================================================
+    # CONFIGURAÇÕES
+    # ================================================================
+
+    def open_settings(self):
+
+        self.clear_content()
+
+        self.sidebar.set_active(
+            self.sidebar.settings_button
+        )
+
+        self.show_placeholder(
+            "Configurações",
+            "Configurações do sistema"
+        )
+
+    # ================================================================
+    # TELA TEMPORÁRIA
+    # ================================================================
+
+    def show_placeholder(
+        self,
+        title,
+        subtitle
+    ):
+
+        frame = ctk.CTkFrame(
+            self.content,
+            fg_color="#F5F5F5",
+            corner_radius=0
+        )
+
+        frame.grid(
+            row=0,
+            column=0,
+            sticky="nsew"
+        )
+
+        frame.grid_columnconfigure(
+            0,
+            weight=1
+        )
+
+        frame.grid_rowconfigure(
+            0,
+            weight=1
+        )
+
+        container = ctk.CTkFrame(
+            frame,
             fg_color="transparent"
         )
 
-        self.tela_atual.grid(
+        container.grid(
             row=0,
-            column=0,
-            sticky="nsew",
-            padx=30,
-            pady=30
+            column=0
         )
 
-        titulo = ctk.CTkLabel(
-            self.tela_atual,
-            text="Dashboard",
+        title_label = ctk.CTkLabel(
+            container,
+            text=title,
             font=ctk.CTkFont(
-                size=30,
+                family="Arial",
+                size=32,
                 weight="bold"
             ),
             text_color="#111111"
         )
 
-        titulo.pack(
-            anchor="w"
+        title_label.pack(
+            pady=(0, 5)
         )
 
-        subtitulo = ctk.CTkLabel(
-            self.tela_atual,
-            text="Visão geral do controle de estoque.",
+        subtitle_label = ctk.CTkLabel(
+            container,
+            text=subtitle,
             font=ctk.CTkFont(
-                size=15
+                size=14
             ),
             text_color="#666666"
         )
 
-        subtitulo.pack(
-            anchor="w",
-            pady=(5, 30)
-        )
+        subtitle_label.pack()
 
-# PRODUTOS
-    def mostrar_produtos(self):
-
-        self.limpar_conteudo()
-
-        self.tela_atual = ProdutosView(
-            self.area_conteudo,
-            controller=self.produto_controller
-        )
-
-        self.tela_atual.grid(
-            row=0,
-            column=0,
-            sticky="nsew"
-        )
-
-# CLIENTES
-    def mostrar_clientes(self):
-
-        self.limpar_conteudo()
-
-        self.tela_atual = ctk.CTkFrame(
-            self.area_conteudo,
-            fg_color="transparent"
-        )
-
-        self.tela_atual.grid(
-            row=0,
-            column=0,
-            sticky="nsew",
-            padx=30,
-            pady=30
-        )
-
-        titulo = ctk.CTkLabel(
-            self.tela_atual,
-            text="Clientes",
+        status_label = ctk.CTkLabel(
+            container,
+            text="Esta tela será implementada na próxima etapa.",
             font=ctk.CTkFont(
-                size=30,
-                weight="bold"
+                size=12
             ),
-            text_color="#111111"
+            text_color="#C8102E"
         )
 
-        titulo.pack(
-            anchor="w"
-        )
-    
-# FORNECEDORES
-    def mostrar_fornecedores(self):
-
-        self.limpar_conteudo()
-
-        self.tela_atual = ctk.CTkFrame(
-            self.area_conteudo,
-            fg_color="transparent"
+        status_label.pack(
+            pady=(15, 0)
         )
 
-        self.tela_atual.grid(
-            row=0,
-            column=0,
-            sticky="nsew",
-            padx=30,
-            pady=30
-        )
 
-        titulo = ctk.CTkLabel(
-            self.tela_atual,
-            text="Fornecedores",
-            font=ctk.CTkFont(
-                size=30,
-                weight="bold"
-            ),
-            text_color="#111111"
-        )
-
-        titulo.pack(
-            anchor="w"
-        )
-
-    # ==========================================================
-    # COMPRAS
-    # ==========================================================
-
-    def mostrar_compras(self):
-
-        self.limpar_conteudo()
-
-        self.tela_atual = ComprasView(
-            self.area_conteudo,
-            controller=self.compra_controller
-        )
-
-        self.tela_atual.grid(
-            row=0,
-            column=0,
-            sticky="nsew"
-        )
-
-    # ==========================================================
-    # ENTRADAS
-    # ==========================================================
-
-    def mostrar_entradas(self):
-
-        self.limpar_conteudo()
-
-        self.tela_atual = ctk.CTkFrame(
-            self.area_conteudo,
-            fg_color="transparent"
-        )
-
-        self.tela_atual.grid(
-            row=0,
-            column=0,
-            sticky="nsew",
-            padx=30,
-            pady=30
-        )
-
-        titulo = ctk.CTkLabel(
-            self.tela_atual,
-            text="Entradas",
-            font=ctk.CTkFont(
-                size=30,
-                weight="bold"
-            ),
-            text_color="#111111"
-        )
-
-        titulo.pack(
-            anchor="w"
-        )
-
-    # ==========================================================
-    # SAÍDAS
-    # ==========================================================
-
-    def mostrar_saidas(self):
-
-        self.limpar_conteudo()
-
-        self.tela_atual = ctk.CTkFrame(
-            self.area_conteudo,
-            fg_color="transparent"
-        )
-
-        self.tela_atual.grid(
-            row=0,
-            column=0,
-            sticky="nsew",
-            padx=30,
-            pady=30
-        )
-
-        titulo = ctk.CTkLabel(
-            self.tela_atual,
-            text="Saídas",
-            font=ctk.CTkFont(
-                size=30,
-                weight="bold"
-            ),
-            text_color="#111111"
-        )
-
-        titulo.pack(
-            anchor="w"
-        )
-
-    # ==========================================================
-    # USUÁRIOS
-    # ==========================================================
-
-    def mostrar_usuarios(self):
-
-        self.limpar_conteudo()
-
-        self.tela_atual = ctk.CTkFrame(
-            self.area_conteudo,
-            fg_color="transparent"
-        )
-
-        self.tela_atual.grid(
-            row=0,
-            column=0,
-            sticky="nsew",
-            padx=30,
-            pady=30
-        )
-
-        titulo = ctk.CTkLabel(
-            self.tela_atual,
-            text="Usuários",
-            font=ctk.CTkFont(
-                size=30,
-                weight="bold"
-            ),
-            text_color="#111111"
-        )
-
-        titulo.pack(
-            anchor="w"
-        )
+if __name__ == "__main__":
+    app = MainWindow()
+    app.mainloop()
